@@ -46,6 +46,9 @@ function deal() {
 };
 
 function countdown() {
+    if (timer = 0) {
+        return;
+    };
     timer = timer - 1000;
     setTimeout(countdown, 1000);
     document.querySelector('#time').innerHTML = timer;
@@ -60,7 +63,7 @@ function drawStars() {
 function flip(e) {
     console.log(e.target);
     let currentCard = e.target;
-    if (e.target.hasClass('face-up')) {
+    if (e.target.classList.contains('face-up')) {
         return;
     };
     moves++;
@@ -71,8 +74,9 @@ function flip(e) {
             drawStars();
         };
     };
-    currentCard.removeClass('face-down');
-    currentCard.addClass('face-up');
+    console.log(currentCard);
+    currentCard.classList.remove('face-down');
+    currentCard.classList.add('face-up');
     
     // Store the symbol on the flipped-over card
     symbol = currentCard.getElementsByTagName('p')[0].innerHTML;
@@ -103,9 +107,18 @@ function match() {
 
 function mismatch() {
     // modal
-    document.querySelectorAll('.face-up').addClass('face-down');
-    document.querySelectorAll('.face-down').removeClass('face-up');
-};
+    setTimeout(function() {
+        let revealedCards = document.querySelectorAll('.face-up');
+        for (revealedCard of revealedCards) {
+            revealedCard.classList.add('face-down');
+        };
+        // NOPE! We have to make sure that when ccards are matched, they have the face-up class removed and replaced with a "matched" class which would also show what's on the card but would avoid them being turned face down again later on.
+        let cardsWithFaceDown = document.querySelectorAll('.face-down');
+        for (cardWithFaceDown of cardsWithFaceDown) {
+             cardWithFaceDown.classList.remove('face-up');
+        };
+    }, 1000);
+}
 
 function win() {
     // stop counter
@@ -123,7 +136,7 @@ function startGame() {
         starCount = 3;
         shuffle();
         deal();
-        document.getElementbyId('reset').addEventListener('click', startGame);
+        document.getElementById('reset').addEventListener('click', startGame);
         setTimeout(countdown, 1000);
         drawStars();
 };
