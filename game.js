@@ -2,7 +2,7 @@ let num = 0;
 
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'];
 
-let cardOrder = [],
+let cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
     timer = 180000;
@@ -12,14 +12,14 @@ let cardOrder = [],
 // This array will determine the order the
 // cards are 'dealt' (drawn) on the screen.
 function shuffle() {
-    if (cardOrder.length < 12) {
+    if (cardPositions.length < 12) {
         num = Math.round(Math.random() * 11) + 1;
-        if (!cardOrder.includes(num)) {
-            cardOrder.push(num);
+        if (!cardPositions.includes(num)) {
+            cardPositions.push(num);
         };
         shuffle();
     } else {
-        console.log(cardOrder);
+        console.log(cardPositions);
         return;
     }
 };
@@ -29,9 +29,9 @@ function deal() {
         cardHTML = '';
     
     // draw a div for each card
-    for (const card of cardOrder) {
+    for (const cardPosition of cardPositions) {
         //draw a div for current card
-        index = cardOrder[card];
+        index = cardPositions[cardPosition];
         symbol = symbolData[index];
         cardHTML = document.createElement('div');
         cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
@@ -39,7 +39,10 @@ function deal() {
         document.querySelector('.board').appendChild(cardHTML);
     };
     
-    document.querySelectorAll('.card').addEventListener('click', flip());
+    const cards = document.querySelectorAll('.card');
+    for (card of cards) {
+        card.addEventListener('click', flip);
+    };
 };
 
 function countdown() {
@@ -54,8 +57,10 @@ function drawStars() {
     }
 };
 
-function flip() {
-    if (this.hasClass('face-up')) {
+function flip(e) {
+    console.log(e.target);
+    let currentCard = e.target;
+    if (e.target.hasClass('face-up')) {
         return;
     };
     moves++;
@@ -66,11 +71,11 @@ function flip() {
             drawStars();
         };
     };
-    this.removeClass('face-down');
-    this.addClass('face-up');
+    currentCard.removeClass('face-down');
+    currentCard.addClass('face-up');
     
     // Store the symbol on the flipped-over card
-    symbol = this.getElementsByTagName('p')[0].innerHTML;
+    symbol = currentCard.getElementsByTagName('p')[0].innerHTML;
     
     // If there's a face up card with a matching
     // symbol, run the match() function. If there's
@@ -111,7 +116,7 @@ function win() {
 function startGame() {
     console.log('start game');
     let num = 0,
-        cardOrder = [],
+        cardPositions = [],
         faceUpSymbols = [],
         moves = 0,
         timer = 180000;
