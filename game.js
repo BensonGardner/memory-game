@@ -12,13 +12,14 @@ let cardOrder = [],
 // This array will determine the order the
 // cards are 'dealt' (drawn) on the screen.
 function shuffle() {
-    if (data.cardOrder.length < 12) {
-        num = Math.random() * 12;
-        if (!data.cardOrder.find(num)) {
-            data.cardOrder.append(num);
+    if (cardOrder.length < 12) {
+        num = Math.round(Math.random() * 11) + 1;
+        if (!cardOrder.includes(num)) {
+            cardOrder.push(num);
         };
         shuffle();
     } else {
+        console.log(cardOrder);
         return;
     }
 };
