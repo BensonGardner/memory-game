@@ -33,8 +33,8 @@ function deal() {
         //draw a div for current card
         index = cardOrder[card];
         symbol = symbolData[index];
-        cardHTML = '<div class="card face-down"><p class="card-symbol">' + 
-            symbol + '</p></div>'; 
+        cardHTML = document.createElement('div');
+        cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
         
         document.querySelector('.board').appendChild(cardHTML);
     };
