@@ -1,0 +1,42 @@
+data
+    array of symbols. must have each of 8 appear twice. 
+    card order
+        create another array by randomly generating integers, 1-16, ond after the other. each time, iterate over teh symbol array and check if the value already exists within this array adn if so, generate a different random integer. kep going until all 16 are represented somewhere in the array.
+        
+        These integers are used to draw from our array of symbols.
+        
+game elements
+    reset button - resets values, starts over
+    move counter
+    timer   (mybe use setTimeout to have it count down)
+    cards    WAIT .   To make a "card" just create a div with the click listener on it and the right styling and with the inner html that matches the symbol and classes of flippd up and flipped down  . Maybe the symbol can be stored in a <p> or div with a acertain id and to chec for a match you look for tht id or class within the particulr div. Or maybe you just grab that symbol on clik and populate an app-wide variable with "face up symbol" which you compare to the next one clicked. 
+        array of objects.  Maybe each created usinga prototype Card. 
+        
+        contains their symbol, 
+        and their value of flipped or revealed
+        and their value of matched or active. 
+        and has a method which listens for a click and then:
+          advances the move counter, 
+          checks to see if it's time to lower the star rating and if yes, does so, then 
+          flips the card (changes the appearace to face up), then
+          checks if there are any othr cards flipped up, then 
+            does one of two things: 
+               if there isn't one, leaves the current one flipped up and its value stored as revealed -- or alternatively just toggles this card to "active" status, or
+               if there is one, then does one of two things:
+                  if the active (Flipped up) card does not have a matching symbol, then does a sad modal/animation and turns both back over, or
+                  if the active (flipped up) card has a matching symbol, then does a happy animation/modal and leaves both cards face up but matched (not flippable), and then
+                      if there are no more cards unmatched, stops the timer and runs a win-game modal, displays score if that's rqeuired, or 
+                      if there are still cards to be matched, then does nothing other than allow the player to begin flipping cards again. (will itbe weird if you have the ability to flip cards while the animatinos are playing?)
+                      where you can flip them. once flipped, activates the document-wide check for if there's another flipped, and if so, run either matched or mismatched. Or maybe checkformatch is one function - we have a document-wide variable called "revealed" and whenever a card 
+                WAIT. Just checks to see if there's a value in the "Face upclicked" var/let, then if yes, turns faceup cards to "matched" which inlcudds  CSS animation and then does a modal and if not turns all cards to face down and does a diff modal. Either way clears the variable.  Then checks if any ards are still facedown and if not, does teh win=game modal, dispays scoer, stops timer.
+        
+
+The event listeners are all just invoking a function when the div with the listener is clicked - and passing a variable or may be a this value
+
+the value of a previously flipped card would be stored in a variable.
+
+the "matched" and "mismatched" functions could be document-wide, just look for any cards possessing the "revealed" value and then do whichever animation/modal, then eithe rdesigate the matched ones as "matched" and therefore unflippable, or else flip them back onve.
+
+
+
+
