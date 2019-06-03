@@ -7,13 +7,16 @@ let cardPositions = [],
     moves = 0,
     timer = 180000;
 
+const star = document.createElement('span');
+star.innerHTML = 0x2B50;
+
 // Shuffle the deck: create an
 // array of randomly ordered numbers, 1-12.
 // This array will determine the order the
 // cards are 'dealt' (drawn) on the screen.
 function shuffle() {
     if (cardPositions.length < 12) {
-        num = Math.round(Math.random() * 11) + 1;
+        num = Math.round(Math.random() * 11);
         if (!cardPositions.includes(num)) {
             cardPositions.push(num);
         };
@@ -31,7 +34,7 @@ function deal() {
     // draw a div for each card
     for (const cardPosition of cardPositions) {
         //draw a div for current card
-        index = cardPositions[cardPosition];
+        index = cardPosition;
         symbol = symbolData[index];
         cardHTML = document.createElement('div');
         cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
@@ -56,23 +59,30 @@ function countdown() {
 
 function drawStars() {
     for (i = 0; i < starCount; i++) {   
-        document.querySelector('#stars').innerHTML = 0x2B50;
+        // the utf code isn't making a star, it's making "11088"    
+        
+        document.querySelector('#stars').append(star);
     }
 };
+
+function advanceMoves() {
+    moves++;
+    document.getElementById('moves-remaining').innerHTML = moves;
+    // this little bit could probably just be a switch
+    // for if moves is 10, 15, 20
+    if (moves % 10 === 0) {
+        if (starCount > 1) {
+            starCount = starCount - 1;
+            drawStars();
+        };
+    };
+}
 
 function flip(e) {
     console.log(e.target);
     let currentCard = e.target;
     if (e.target.classList.contains('face-up')) {
         return;
-    };
-    moves++;
-    document.getElementById('moves-remaining').innerHTML = moves;
-    if (moves % 5 === 0) {
-        if (starCount > 1) {
-            starCount = starCount - 1;
-            drawStars();
-        };
     };
     console.log(currentCard);
     currentCard.classList.remove('face-down');
@@ -87,17 +97,24 @@ function flip(e) {
     // aren't any face up cards, simply add this card's
     // symbol to the array of faceUpSymbols.
     if (symbol === faceUpSymbols[0]) {
+        advanceMoves();
         match();
-    } else if (faceUpSymbols[0]) {
-        mismatch();
     } else {
-        faceUpSymbols.push(symbol);
-    };
-}
+        if (faceUpSymbols[0]) {
+            advanceMoves();
+            mismatch();
+        } else {
+            faceUpSymbols.push(symbol);
+        };
+    }
+};
 
 function match() {
-    document.querySelectorAll('.face-up').addClass('matched');
-    document.querySelectorAll('.matched').removeClass('face-up');
+    let faceUpCards = document.querySelectorAll('.face-up');
+    for (faceUpCard of faceUpCards) {
+        faceUpCard.classList.add('matched');
+        faceUpCard.classList.remove('face-up');
+    }
     // modal
     faceUpSymbols = [];
     if (document.querySelectorAll('.face-down').length === 0) {
@@ -111,13 +128,10 @@ function mismatch() {
         let revealedCards = document.querySelectorAll('.face-up');
         for (revealedCard of revealedCards) {
             revealedCard.classList.add('face-down');
-        };
-        // NOPE! We have to make sure that when ccards are matched, they have the face-up class removed and replaced with a "matched" class which would also show what's on the card but would avoid them being turned face down again later on.
-        let cardsWithFaceDown = document.querySelectorAll('.face-down');
-        for (cardWithFaceDown of cardsWithFaceDown) {
-             cardWithFaceDown.classList.remove('face-up');
+            revealedCard.classList.remove('face-up');
         };
     }, 1000);
+    faceUpSymbols = [];
 }
 
 function win() {
