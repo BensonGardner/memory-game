@@ -81,7 +81,7 @@ function advanceMoves() {
 function flip(e) {
     console.log(e.target);
     let currentCard = e.target;
-    if (e.target.classList.contains('face-up')) {
+    if (currentCard.classList.contains('face-up') || document.getElementsByClassName('face-up').length > 1) {
         return;
     };
     console.log(currentCard);
