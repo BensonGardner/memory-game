@@ -56,6 +56,10 @@ h1 {
 }
 
 .matched {
+    background-color: darkgrey;
+    text-align: center;
+    vertical-align: middle;
+    color: darkslategray;
     filter: saturate(25%);
 }
 
