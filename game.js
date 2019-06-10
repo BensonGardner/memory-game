@@ -54,7 +54,7 @@ function countdown() {
     };
     timer = timer - 1000;
     setTimeout(countdown, 1000);
-    document.querySelector('#time').innerHTML = timer;
+    document.querySelector('#time').innerHTML = timer/1000;
 };
 
 function drawStars() {
