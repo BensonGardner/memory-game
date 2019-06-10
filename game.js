@@ -5,7 +5,7 @@ const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar
 let cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 180000;
+    timer = 60000;
 
 const star = document.createElement('span');
 star.innerHTML = 0x2B50;
@@ -49,7 +49,7 @@ function deal() {
 };
 
 function countdown() {
-    if (timer = 0) {
+    if (timer === 0) {
         return;
     };
     timer = timer - 1000;
@@ -111,15 +111,18 @@ function flip(e) {
 
 function match() {
     let faceUpCards = document.querySelectorAll('.face-up');
-    for (faceUpCard of faceUpCards) {
-        faceUpCard.classList.add('matched');
-        faceUpCard.classList.remove('face-up');
-    }
-    // modal
-    faceUpSymbols = [];
-    if (document.querySelectorAll('.face-down').length === 0) {
-        win();
-    };
+    setTimeout(function() {
+        for (faceUpCard of faceUpCards) {
+            faceUpCard.classList.add('matched');
+            faceUpCard.classList.remove('face-up');
+        }
+        // modal    
+        faceUpSymbols = [];
+        if (document.querySelectorAll('.face-down').length === 0) {
+            win();
+        };
+
+    }, 250);
 };
 
 function mismatch() {
@@ -146,7 +149,7 @@ function startGame() {
         cardPositions = [],
         faceUpSymbols = [],
         moves = 0,
-        timer = 180000;
+        timer = 60000;
         starCount = 3;
         shuffle();
         deal();
