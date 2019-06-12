@@ -8,10 +8,11 @@ let num = 0,
     timer = 45000;
     gameOver = false;
     starCount = 3;
+    newStar = null;
     endGameInfo = 0;
 
 const star = document.createElement('span');
-star.innerHTML = 0x2B50;
+star.innerHTML = String.fromCodePoint(0x2B50);
 
 // To shuffle the deck, first we create an
 // array of randomly ordered numbers, 1-12.
@@ -65,10 +66,10 @@ function countdown() {
 };
 
 function drawStars() {
-    for (i = 0; i < starCount; i++) {   
-        // the utf code isn't making a star, it's making "11088"    
-        
-        document.querySelector('#stars').append(star);
+    document.querySelector('#stars').innerHTML = '';
+    for (i = 0; i < starCount; i++) {
+        newStar = star.cloneNode(true);
+        document.querySelector('#stars').appendChild(newStar);
     }
 };
 
@@ -188,6 +189,7 @@ function startGame() {
         gameOver = false;
         endGameInfo = '';
         starCount = 3;
+        newStar = null;
         shuffle();
         deal();
         document.getElementById('reset').addEventListener('click', startGame);
