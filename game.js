@@ -8,6 +8,7 @@ let num = 0,
     timer = 45000;
     gameOver = false;
     starCount = 3;
+    endGameInfo = 0;
 
 const star = document.createElement('span');
 star.innerHTML = 0x2B50;
@@ -55,7 +56,7 @@ function countdown() {
         return;
     }
     if (timer === 0) {
-        lose();
+        lose('Out of time!');
         return;
     };
     timer = timer - 1000;
@@ -76,15 +77,19 @@ function advanceMoves() {
     document.getElementById('moves-remaining').innerHTML = moves;
     // this little bit could probably just be a switch
     // for if moves is 10, 15, 20
-    if (moves % 10 === 0) {
-        if (starCount > 1) {
-            starCount = starCount - 1;
+    console.log(starCount);
+    console.log(moves % 5);
+    
+    if (moves > 0) {
+        if (moves % 5 === 0) {
+            starCount--;
             drawStars();
         };
     };
-    if (moves === 0) {
-        lose();
-    }
+    if (starCount == 0) {
+        lose("Out of moves!");
+    };
+    console.log(starCount);
 }
 
 function flip(e) {
@@ -147,33 +152,29 @@ function mismatch() {
 };
 
 function modal(message) {
+    docHeight = document.body.clientHeight;
+    screen.style.height = docHeight;
     screen.style.visibility = 'visible';
     let messageBox = document.createElement('div');
     document.getElementById('board').appendChild(messageBox);
     messageBox.classList.add('modal');
-    messageBox.innerHTML = '<p>${messasge}</p>';
+    messageBox.innerHTML = '<p>' + message + '</p>'; // try the template string 
+                                                      // after verifying this works. 
 };
 
 function win() {
     gameOver = true;
-    modal('Congratulations! You won!');
-    console.log(document.getElementById('screen'));
-    docHeight = document.body.clientHeight;
-    console.log(docHeight);
-    screen.style.height = docHeight + 'px';
-    console.log(screen.style.height);
-    //screen.style.visibility = 'visible';
-    // stop counter
+    modal('Congratulations! You won!');  // Maybe later feed this a template string using backticks
     // modal , reporting star score.  
     // Maybe put a reset button in the modal
 };
 
-function lose() {
+function lose(reason) {
     gameOver = true;
-    modal('You lost out');
+    endGameInfo = 'You lost! ' + reason;
+    modal(endGameInfo);
     console.log(document.getElementById('screen'));
-    //screen.style.visibility = 'visible';
-    // modal , you lost with the reason
+     // modal , you lost with the reason
     // Maybe put a reset button in the modal
 }
 
@@ -185,6 +186,7 @@ function startGame() {
         moves = 0,
         timer = 45000;
         gameOver = false;
+        endGameInfo = '';
         starCount = 3;
         shuffle();
         deal();
