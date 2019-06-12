@@ -1,16 +1,18 @@
-let num = 0;
+const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
+      screen = document.getElementById('screen');
 
-const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'];
-
-let cardPositions = [],
+let num = 0,
+    cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 60000;
+    timer = 45000;
+    gameOver = false;
+    starCount = 3;
 
 const star = document.createElement('span');
 star.innerHTML = 0x2B50;
 
-// Shuffle the deck: create an
+// To shuffle the deck, first we create an
 // array of randomly ordered numbers, 1-12.
 // This array will determine the order the
 // cards are 'dealt' (drawn) on the screen.
@@ -39,7 +41,7 @@ function deal() {
         cardHTML = document.createElement('div');
         cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
         
-        document.querySelector('.board').appendChild(cardHTML);
+        document.querySelector('#board').appendChild(cardHTML);
     };
     
     const cards = document.querySelectorAll('.card');
@@ -49,7 +51,11 @@ function deal() {
 };
 
 function countdown() {
+    if (gameOver === true) {
+        return;
+    }
     if (timer === 0) {
+        lose();
         return;
     };
     timer = timer - 1000;
@@ -76,6 +82,9 @@ function advanceMoves() {
             drawStars();
         };
     };
+    if (moves === 0) {
+        lose();
+    }
 }
 
 function flip(e) {
@@ -135,11 +144,36 @@ function mismatch() {
         };
     }, 1000);
     faceUpSymbols = [];
-}
+};
+
+function modal(message) {
+    screen.style.visibility = 'visible';
+    let messageBox = document.createElement('div');
+    document.getElementById('board').appendChild(messageBox);
+    messageBox.classList.add('modal');
+    messageBox.innerHTML = '<p>${messasge}</p>';
+};
 
 function win() {
+    gameOver = true;
+    modal('Congratulations! You won!');
+    console.log(document.getElementById('screen'));
+    docHeight = document.body.clientHeight;
+    console.log(docHeight);
+    screen.style.height = docHeight + 'px';
+    console.log(screen.style.height);
+    //screen.style.visibility = 'visible';
     // stop counter
     // modal , reporting star score.  
+    // Maybe put a reset button in the modal
+};
+
+function lose() {
+    gameOver = true;
+    modal('You lost out');
+    console.log(document.getElementById('screen'));
+    //screen.style.visibility = 'visible';
+    // modal , you lost with the reason
     // Maybe put a reset button in the modal
 }
 
@@ -149,7 +183,8 @@ function startGame() {
         cardPositions = [],
         faceUpSymbols = [],
         moves = 0,
-        timer = 60000;
+        timer = 45000;
+        gameOver = false;
         starCount = 3;
         shuffle();
         deal();
@@ -159,3 +194,4 @@ function startGame() {
 };
 
 startGame();
+

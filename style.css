@@ -3,9 +3,19 @@ body {
     font-family: Roboto, sans-serif;
 }
 
+#screen {
+    z-index: 0;
+    width: 100vw;
+    height: 100%;
+    opacity: 0.7;
+    position: absolute;
+    background-color: black;
+    visibility: hidden;
+}
+
 /*   Maybe this is the right appraoch. With 12 cards, it will render 
 // in even rows at 2, 3, 4nd 4 across. we can make sure 5 doesn't happen.*/
-.board {
+#board {
     width: 100%;
     display: flex; 
     flex-direction: row;
@@ -61,6 +71,19 @@ h1 {
     vertical-align: middle;
     color: darkslategray;
     filter: saturate(25%);
+}
+
+.modal {
+    position: absolute;
+    left: 35%;
+    top: 35%;
+    background-color: white;
+    border-radius: 20px;
+    border: 25px;
+    border-color: darkcyan;
+    margin: 25px;   
+    width: 230px;
+    height: 100px;
 }
 
 
