@@ -74,6 +74,7 @@ h1 {
 }
 
 .modal {
+    visibility: hidden;
     position: absolute;
     align-self: center;
     text-align: center;

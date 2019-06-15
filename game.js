@@ -1,5 +1,17 @@
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
-      screen = document.getElementById('screen');
+      screen = document.getElementById('screen'),
+      star = document.createElement('span'),
+      starOutline = document.createElement('span'),
+      messageBox = document.createElement('div');
+
+// Create star and star outline nodes using unicode symbols
+star.innerHTML = String.fromCodePoint(0x2605); //(0x2B50);
+starOutline.innerHTML = String.fromCodePoint(0x2606); 
+
+//Set up our win/lose message box for later
+messageBox.innerHTML = '<p id="message"></p><p id="timeMessage"></p><p id="ratingMessage"></p>';
+messageBox.style.visibility = 'hidden';
+document.body.appendChild(messageBox);
 
 let num = 0,
     cardPositions = [],
@@ -10,9 +22,6 @@ let num = 0,
     starCount = 3;
     newStar = null;
     endGameInfo = 0;
-
-const star = document.createElement('span');
-star.innerHTML = String.fromCodePoint(0x2B50);
 
 // To shuffle the deck, first we create an
 // array of randomly ordered numbers, 1-12.
@@ -67,8 +76,12 @@ function countdown() {
 
 function drawStars() {
     document.querySelector('#stars').innerHTML = '';
-    for (i = 0; i < starCount; i++) {
-        newStar = star.cloneNode(true);
+    for (i = 0; i < 3; i++) {
+        if (i < starCount) {
+            newStar = star.cloneNode(true);
+        } else {
+            newStar = starOutline.cloneNode(true);
+        };
         document.querySelector('#stars').appendChild(newStar);
     }
 };
@@ -156,11 +169,12 @@ function modal(message) {
     docHeight = document.body.clientHeight;
     screen.style.height = docHeight;
     screen.style.visibility = 'visible';
-    let messageBox = document.createElement('div');
-    document.getElementById('board').appendChild(messageBox);
+    document.getElementById('message').innerHTML = message;
+    document.getElementById('timeMessage').innerHTML = 'Your time: ' + 
+        timer/1000;
+    document.getElementById('ratingMessage').innerHTML = 'Your rating: ' + document.querySelector('#stars').innerHTML;
     messageBox.classList.add('modal');
-    messageBox.innerHTML = '<p>' + message + '</p>'; // try the template string 
-                                                      // after verifying this works. 
+    messageBox.style.visibility = 'visible';
 };
 
 function win() {
@@ -195,6 +209,7 @@ function startGame() {
         document.getElementById('reset').addEventListener('click', startGame);
         setTimeout(countdown, 1000);
         drawStars();
+    messageBox.style.visibility = 'hidden';
 };
 
 startGame();
