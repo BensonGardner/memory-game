@@ -9,16 +9,19 @@ star.innerHTML = String.fromCodePoint(0x2605); //(0x2B50);
 starOutline.innerHTML = String.fromCodePoint(0x2606); 
 
 //Set up our win/lose message box for later
-messageBox.innerHTML = '<p id="message"></p><p id="timeMessage"></p><p id="ratingMessage"></p>';
+messageBox.innerHTML = '<p id="message"></p><p id="timeMessage"></p>' +
+    '<p id="ratingMessage"></p><button type="button" class="reset">New Game</div>';
 messageBox.style.visibility = 'hidden';
 document.body.appendChild(messageBox);
+
+let buttons = document.querySelectorAll('.reset');
 
 let num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
     timer = 45000;
-    gameOver = false;
+    gameState = 'running';
     starCount = 3;
     newStar = null;
     endGameInfo = 0;
@@ -47,8 +50,7 @@ function deal() {
     // draw a div for each card
     for (const cardPosition of cardPositions) {
         //draw a div for current card
-        index = cardPosition;
-        symbol = symbolData[index];
+        symbol = symbolData[cardPosition];
         cardHTML = document.createElement('div');
         cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
         
@@ -62,16 +64,17 @@ function deal() {
 };
 
 function countdown() {
-    if (gameOver === true) {
-        return;
-    }
+    console.log('counting');
     if (timer === 0) {
+        console.log('xero');
         lose('Out of time!');
         return;
+    } else if (gameState === 'running') {
+        console.log('game not over');
+        timer = timer - 1000;
+        setTimeout(countdown, 1000);
+        document.querySelector('#time').innerHTML = timer/1000;
     };
-    timer = timer - 1000;
-    setTimeout(countdown, 1000);
-    document.querySelector('#time').innerHTML = timer/1000;
 };
 
 function drawStars() {
@@ -170,6 +173,7 @@ function modal(message) {
     screen.style.height = docHeight;
     screen.style.visibility = 'visible';
     document.getElementById('message').innerHTML = message;
+    
     document.getElementById('timeMessage').innerHTML = 'Your time: ' + 
         timer/1000;
     document.getElementById('ratingMessage').innerHTML = 'Your rating: ' + document.querySelector('#stars').innerHTML;
@@ -178,38 +182,40 @@ function modal(message) {
 };
 
 function win() {
-    gameOver = true;
+    gameState = 'won';
     modal('Congratulations! You won!');  // Maybe later feed this a template string using backticks
-    // modal , reporting star score.  
-    // Maybe put a reset button in the modal
 };
 
 function lose(reason) {
-    gameOver = true;
+    gameState = 'lost';
     endGameInfo = 'You lost! ' + reason;
     modal(endGameInfo);
     console.log(document.getElementById('screen'));
-     // modal , you lost with the reason
-    // Maybe put a reset button in the modal
 }
 
 function startGame() {
-    console.log('start game');
-    let num = 0,
-        cardPositions = [],
-        faceUpSymbols = [],
-        moves = 0,
-        timer = 45000;
-        gameOver = false;
-        endGameInfo = '';
-        starCount = 3;
-        newStar = null;
-        shuffle();
-        deal();
-        document.getElementById('reset').addEventListener('click', startGame);
-        setTimeout(countdown, 1000);
-        drawStars();
+    screen.style.visibility = 'hidden';
+    document.getElementById('board').innerHTML = '';
+    num = 0,
+    cardPositions = [],
+    faceUpSymbols = [],
+    moves = 0,
+    timer = 45000;
+    gameState = 'running';
+    endGameInfo = '';
+    starCount = 3;
+    newStar = null;
+    shuffle();
+    deal();
     messageBox.style.visibility = 'hidden';
+    for (const button of buttons) {
+        console.log(button);
+        console.log(buttons[button]);
+        button.addEventListener('click', startGame);
+    };
+    setTimeout(countdown, 1000);
+    drawStars();
+
 };
 
 startGame();
