@@ -1,5 +1,7 @@
+// timer is doubling up when you restart, at least when game is still running on click.
+
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
-      screen = document.getElementById('screen'),
+      screenDarkener = document.getElementById('screenDarkener'),
       star = document.createElement('span'),
       starOutline = document.createElement('span'),
       messageBox = document.createElement('div');
@@ -20,8 +22,8 @@ let num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 45000;
-    gameState = 'running';
+    timer = 20000;
+    gameState = 'waiting';
     starCount = 3;
     newStar = null;
     endGameInfo = 0;
@@ -38,7 +40,6 @@ function shuffle() {
         };
         shuffle();
     } else {
-        console.log(cardPositions);
         return;
     }
 };
@@ -64,16 +65,15 @@ function deal() {
 };
 
 function countdown() {
-    console.log('counting');
     if (timer === 0) {
-        console.log('xero');
         lose('Out of time!');
         return;
     } else if (gameState === 'running') {
-        console.log('game not over');
         timer = timer - 1000;
         setTimeout(countdown, 1000);
         document.querySelector('#time').innerHTML = timer/1000;
+    } else {
+        return;
     };
 };
 
@@ -92,11 +92,6 @@ function drawStars() {
 function advanceMoves() {
     moves++;
     document.getElementById('moves-remaining').innerHTML = moves;
-    // this little bit could probably just be a switch
-    // for if moves is 10, 15, 20
-    console.log(starCount);
-    console.log(moves % 5);
-    
     if (moves > 0) {
         if (moves % 5 === 0) {
             starCount--;
@@ -106,16 +101,19 @@ function advanceMoves() {
     if (starCount == 0) {
         lose("Out of moves!");
     };
-    console.log(starCount);
 }
 
 function flip(e) {
-    console.log(e.target);
+    if (gameState === 'won' || gameState === 'lost') {
+        return;
+    } else if (gameState === 'waiting') {
+        gameState = 'running';
+        setTimeout(countdown, 1000);
+    };
     let currentCard = e.target;
     if (currentCard.classList.contains('face-up') || document.getElementsByClassName('face-up').length > 1) {
         return;
     };
-    console.log(currentCard);
     currentCard.classList.remove('face-down');
     currentCard.classList.add('face-up');
     
@@ -147,17 +145,14 @@ function match() {
             faceUpCard.classList.add('matched');
             faceUpCard.classList.remove('face-up');
         }
-        // modal    
         faceUpSymbols = [];
         if (document.querySelectorAll('.face-down').length === 0) {
             win();
         };
-
     }, 250);
 };
 
 function mismatch() {
-    // modal
     setTimeout(function() {
         let revealedCards = document.querySelectorAll('.face-up');
         for (revealedCard of revealedCards) {
@@ -168,54 +163,59 @@ function mismatch() {
     faceUpSymbols = [];
 };
 
-function modal(message) {
-    docHeight = document.body.clientHeight;
-    screen.style.height = docHeight;
-    screen.style.visibility = 'visible';
+function modal(condition, message) {
+    boardHeight = document.querySelector('#board').scrollHeight;
+    console.log(screenDarkener.style.height);
+    console.log(screenDarkener);
+    screenDarkener.style.height = boardHeight;
+    console.log(screenDarkener.style.height);
+    screenDarkener.style.visibility = 'visible';
+    console.log(screenDarkener.style.height);
     document.getElementById('message').innerHTML = message;
-    
-    document.getElementById('timeMessage').innerHTML = 'Your time: ' + 
-        timer/1000;
-    document.getElementById('ratingMessage').innerHTML = 'Your rating: ' + document.querySelector('#stars').innerHTML;
+    if (condition === 'win') {
+        document.getElementById('timeMessage').innerHTML = 'Your time: ' + 
+            timer/1000;
+        document.getElementById('ratingMessage').innerHTML = 'Your rating: ' +
+            document.querySelector('#stars').innerHTML;
+    };
     messageBox.classList.add('modal');
+    /*messageBox.style.position('absolute');
+    messageBox.align-self('center');
+    messageBox.top('35%');*/
     messageBox.style.visibility = 'visible';
 };
 
 function win() {
     gameState = 'won';
-    modal('Congratulations! You won!');  // Maybe later feed this a template string using backticks
+    modal('win', 'Congratulations! You won!');  // Maybe later feed this a template string using backticks
 };
 
 function lose(reason) {
     gameState = 'lost';
     endGameInfo = 'You lost! ' + reason;
-    modal(endGameInfo);
-    console.log(document.getElementById('screen'));
+    modal('lose', endGameInfo);
 }
 
 function startGame() {
-    screen.style.visibility = 'hidden';
+    gameState = 'waiting';
+    screenDarkener.style.visibility = 'hidden';
     document.getElementById('board').innerHTML = '';
     num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 45000;
-    gameState = 'running';
+    timer = 20000;
+    document.querySelector('#time').innerHTML = timer/1000;
     endGameInfo = '';
     starCount = 3;
     newStar = null;
     shuffle();
     deal();
+    drawStars();
     messageBox.style.visibility = 'hidden';
     for (const button of buttons) {
-        console.log(button);
-        console.log(buttons[button]);
         button.addEventListener('click', startGame);
     };
-    setTimeout(countdown, 1000);
-    drawStars();
-
 };
 
 startGame();
