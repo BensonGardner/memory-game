@@ -1,9 +1,13 @@
-// timer is doubling up when you restart, at least when game is still running on click.
+// can't make screenDarkener full height of container
+// Also can't do right position of messageBox
+// Can't make button in modal work as reset - 
+//   how to assign event listener to it when it isn't in the dom yet
 
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
       screenDarkener = document.getElementById('screenDarkener'),
       star = document.createElement('span'),
       starOutline = document.createElement('span'),
+      messages = document.createElement('div'),
       messageBox = document.createElement('div');
 
 // Create star and star outline nodes using unicode symbols
@@ -11,18 +15,15 @@ star.innerHTML = String.fromCodePoint(0x2605); //(0x2B50);
 starOutline.innerHTML = String.fromCodePoint(0x2606); 
 
 //Set up our win/lose message box for later
-messageBox.innerHTML = '<p id="message"></p><p id="timeMessage"></p>' +
-    '<p id="ratingMessage"></p><button type="button" class="reset">New Game</div>';
-messageBox.style.visibility = 'hidden';
-document.body.appendChild(messageBox);
 
-let buttons = document.querySelectorAll('.reset');
+messageBox.innerHTML = '<button type="button" class="reset">New Game</button>';
+console.log(messageBox.style);
 
 let num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 20000;
+    timer = 35000;
     gameState = 'waiting';
     starCount = 3;
     newStar = null;
@@ -110,7 +111,7 @@ function flip(e) {
         gameState = 'running';
         setTimeout(countdown, 1000);
     };
-    let currentCard = e.target;
+    let currentCard = e.target; 
     if (currentCard.classList.contains('face-up') || document.getElementsByClassName('face-up').length > 1) {
         return;
     };
@@ -165,24 +166,24 @@ function mismatch() {
 
 function modal(condition, message) {
     boardHeight = document.querySelector('#board').scrollHeight;
+    console.log(boardHeight);
     console.log(screenDarkener.style.height);
     console.log(screenDarkener);
     screenDarkener.style.height = boardHeight;
     console.log(screenDarkener.style.height);
     screenDarkener.style.visibility = 'visible';
     console.log(screenDarkener.style.height);
-    document.getElementById('message').innerHTML = message;
+    let mainMessage = document.createElement('p');
+    mainMessage.innerHTML = message;
     if (condition === 'win') {
-        document.getElementById('timeMessage').innerHTML = 'Your time: ' + 
-            timer/1000;
-        document.getElementById('ratingMessage').innerHTML = 'Your rating: ' +
-            document.querySelector('#stars').innerHTML;
+        messages.innerHTML = '<p>Your time: ' + 
+            (35000 - timer)/1000 + ' seconds</p><p>Your rating: ' +
+            document.querySelector('#stars').innerHTML + '</p>';
     };
+    messageBox.prepend(messages);
+    messageBox.prepend(mainMessage);
+    document.body.appendChild(messageBox);
     messageBox.classList.add('modal');
-    /*messageBox.style.position('absolute');
-    messageBox.align-self('center');
-    messageBox.top('35%');*/
-    messageBox.style.visibility = 'visible';
 };
 
 function win() {
@@ -198,13 +199,14 @@ function lose(reason) {
 
 function startGame() {
     gameState = 'waiting';
+    messageBox.remove();
     screenDarkener.style.visibility = 'hidden';
     document.getElementById('board').innerHTML = '';
     num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 20000;
+    timer = 35000;
     document.querySelector('#time').innerHTML = timer/1000;
     endGameInfo = '';
     starCount = 3;
@@ -212,7 +214,7 @@ function startGame() {
     shuffle();
     deal();
     drawStars();
-    messageBox.style.visibility = 'hidden';
+    let buttons = document.querySelectorAll('.reset');
     for (const button of buttons) {
         button.addEventListener('click', startGame);
     };
