@@ -6,18 +6,11 @@
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
       screenDarkener = document.getElementById('screenDarkener'),
       star = document.createElement('span'),
-      starOutline = document.createElement('span'),
-      messages = document.createElement('div'),
-      messageBox = document.createElement('div');
+      starOutline = document.createElement('span');
 
 // Create star and star outline nodes using unicode symbols
 star.innerHTML = String.fromCodePoint(0x2605); //(0x2B50);
 starOutline.innerHTML = String.fromCodePoint(0x2606); 
-
-//Set up our win/lose message box for later
-
-messageBox.innerHTML = '<button type="button" class="reset">New Game</button>';
-console.log(messageBox.style);
 
 let num = 0,
     cardPositions = [],
@@ -173,7 +166,10 @@ function modal(condition, message) {
     console.log(screenDarkener.style.height);
     screenDarkener.style.visibility = 'visible';
     console.log(screenDarkener.style.height);
-    let mainMessage = document.createElement('p');
+    let messages = document.createElement('div'),
+        messageBox = document.createElement('div'),
+        mainMessage = document.createElement('p');
+    messageBox.innerHTML = '<button type="button" id="reset2">New Game</button>';
     mainMessage.innerHTML = message;
     if (condition === 'win') {
         messages.innerHTML = '<p>Your time: ' + 
@@ -182,8 +178,10 @@ function modal(condition, message) {
     };
     messageBox.prepend(messages);
     messageBox.prepend(mainMessage);
-    document.body.appendChild(messageBox);
     messageBox.classList.add('modal');
+    messageBox.setAttribute('id', 'messageBox')
+    document.body.appendChild(messageBox);
+    document.querySelector('#reset2').addEventListener('click', startGame);
 };
 
 function win() {
@@ -199,7 +197,9 @@ function lose(reason) {
 
 function startGame() {
     gameState = 'waiting';
-    messageBox.remove();
+    if (typeof messageBox !== 'undefined') {
+        document.querySelector('#messageBox').remove();
+    };
     screenDarkener.style.visibility = 'hidden';
     document.getElementById('board').innerHTML = '';
     num = 0,
@@ -214,10 +214,7 @@ function startGame() {
     shuffle();
     deal();
     drawStars();
-    let buttons = document.querySelectorAll('.reset');
-    for (const button of buttons) {
-        button.addEventListener('click', startGame);
-    };
+    document.querySelector('#reset').addEventListener('click', startGame);
 };
 
 startGame();
