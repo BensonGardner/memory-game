@@ -1,7 +1,6 @@
 // can't make screenDarkener full height of container
-// Also can't do right position of messageBox
-// Can't make button in modal work as reset - 
-//   how to assign event listener to it when it isn't in the dom yet
+// Also can't do right position of messageBox -- it worked in the commit called "add screen."
+// Can't figure out what the diff is!
 
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
       screenDarkener = document.getElementById('screenDarkener'),
@@ -178,9 +177,9 @@ function modal(condition, message) {
     };
     messageBox.prepend(messages);
     messageBox.prepend(mainMessage);
+    document.body.appendChild(messageBox);
     messageBox.classList.add('modal');
     messageBox.setAttribute('id', 'messageBox')
-    document.body.appendChild(messageBox);
     document.querySelector('#reset2').addEventListener('click', startGame);
 };
 
