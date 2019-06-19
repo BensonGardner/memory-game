@@ -14,7 +14,7 @@ body {
 
 }
 
-#screenDarkener {
+.screen-darkener {
     z-index: 0;
     width: 100vw;
     height: 100vh;
@@ -88,10 +88,23 @@ h1 {
     border: 15px;
     border-color: darkcyan;
     margin: 25px;   
-    width: 230px;
+    width: auto;
     height: 190px;
+    padding: 25px;
 }
 
-.reset {
-    
+#reset {
+    border-radius: 6px;
+    font-family: roboto, sans-serif;
+    font-weight: 400;
+    background-color:white;
+    color: darkcyan;
+}
+
+#reset2 {
+    border-radius: 6px;
+    font-family: roboto, sans-serif;
+    font-weight: 400;
+    background-color:white;
+    color: darkcyan;
 }

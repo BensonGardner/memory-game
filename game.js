@@ -3,7 +3,7 @@
 // Can't figure out what the diff is!
 
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
-      screenDarkener = document.getElementById('screenDarkener'),
+      screenDarkener = document.createElement('div'),
       star = document.createElement('span'),
       starOutline = document.createElement('span');
 
@@ -82,6 +82,7 @@ function drawStars() {
     }
 };
 
+// awfully harsh! soften?
 function advanceMoves() {
     moves++;
     document.getElementById('moves-remaining').innerHTML = moves;
@@ -157,13 +158,16 @@ function mismatch() {
 };
 
 function modal(condition, message) {
-    boardHeight = document.querySelector('#board').scrollHeight;
+
+    screenDarkener.style.visibility = 'visible';
+    screenDarkener.classList.add('screen-darkener');
+        boardHeight = document.querySelector('#board').scrollHeight;
     console.log(boardHeight);
     console.log(screenDarkener.style.height);
     console.log(screenDarkener);
     screenDarkener.style.height = boardHeight;
     console.log(screenDarkener.style.height);
-    screenDarkener.style.visibility = 'visible';
+    document.body.prepend(screenDarkener);
     console.log(screenDarkener.style.height);
     let messages = document.createElement('div'),
         messageBox = document.createElement('div'),
@@ -177,7 +181,7 @@ function modal(condition, message) {
     };
     messageBox.prepend(messages);
     messageBox.prepend(mainMessage);
-    document.body.appendChild(messageBox);
+    document.querySelector('#board').appendChild(messageBox);
     messageBox.classList.add('modal');
     messageBox.setAttribute('id', 'messageBox')
     document.querySelector('#reset2').addEventListener('click', startGame);
@@ -201,12 +205,13 @@ function startGame() {
     };
     screenDarkener.style.visibility = 'hidden';
     document.getElementById('board').innerHTML = '';
-    num = 0,
-    cardPositions = [],
-    faceUpSymbols = [],
-    moves = 0,
+    num = 0;
+    cardPositions = [];
+    faceUpSymbols = [];
+    moves = 0;
     timer = 35000;
     document.querySelector('#time').innerHTML = timer/1000;
+    document.getElementById('moves-remaining').innerHTML = moves;
     endGameInfo = '';
     starCount = 3;
     newStar = null;
