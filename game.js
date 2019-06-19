@@ -1,6 +1,6 @@
-// can't make screenDarkener full height of container
-// Also can't do right position of messageBox -- it worked in the commit called "add screen."
-// Can't figure out what the diff is!
+// need a README
+// Maybe make the reset / reset2 situation more better
+// Anything else look weird?
 
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
       screenDarkener = document.createElement('div'),
@@ -41,7 +41,8 @@ function deal() {
     let symbol = '';
         cardHTML = '';
     
-    // draw a div for each card
+    // draw a div for each card, in the order given by 
+    // the cardPositions array, which we just shuffled.
     for (const cardPosition of cardPositions) {
         //draw a div for current card
         symbol = symbolData[cardPosition];
@@ -72,6 +73,9 @@ function countdown() {
 
 function drawStars() {
     document.querySelector('#stars').innerHTML = '';
+
+    // Draw either a star or a star outline in the rating
+    // section of the page. 
     for (i = 0; i < 3; i++) {
         if (i < starCount) {
             newStar = star.cloneNode(true);
@@ -82,15 +86,13 @@ function drawStars() {
     }
 };
 
-// awfully harsh! soften?
+
 function advanceMoves() {
     moves++;
-    document.getElementById('moves-remaining').innerHTML = moves;
-    if (moves > 0) {
-        if (moves % 5 === 0) {
-            starCount--;
-            drawStars();
-        };
+    document.getElementById('moves-taken').innerHTML = moves;
+    if (moves === 9 || moves === 14 || moves === 17) {
+        starCount--;
+        drawStars()
     };
     if (starCount == 0) {
         lose("Out of moves!");
@@ -98,16 +100,25 @@ function advanceMoves() {
 }
 
 function flip(e) {
+    
+    // Don't allow cards to flip when the game is over,
+    // but if the game is waiting, flipping the first card
+    // triggers the game to start and the countdown to begin.
     if (gameState === 'won' || gameState === 'lost') {
         return;
     } else if (gameState === 'waiting') {
         gameState = 'running';
         setTimeout(countdown, 1000);
     };
+    
     let currentCard = e.target; 
+    
+    // Don't allow a face-up card to be clicked
     if (currentCard.classList.contains('face-up') || document.getElementsByClassName('face-up').length > 1) {
         return;
     };
+    
+    // Otherwise, flip the card from face-down to face-up
     currentCard.classList.remove('face-down');
     currentCard.classList.add('face-up');
     
@@ -133,6 +144,9 @@ function flip(e) {
 };
 
 function match() {
+    
+    // After a fraction of a second, gray out a matched pair
+    // so they're clearly not in play
     let faceUpCards = document.querySelectorAll('.face-up');
     setTimeout(function() {
         for (faceUpCard of faceUpCards) {
@@ -147,6 +161,9 @@ function match() {
 };
 
 function mismatch() {
+
+    // After 1 second, automatically flip a mismatched
+    // pair back to face-down
     setTimeout(function() {
         let revealedCards = document.querySelectorAll('.face-up');
         for (revealedCard of revealedCards) {
@@ -158,17 +175,14 @@ function mismatch() {
 };
 
 function modal(condition, message) {
-
-    screenDarkener.style.visibility = 'visible';
+    
+    // Darken the screen behind the modal
+    bodyHeight = document.body.scrollHeight;
     screenDarkener.classList.add('screen-darkener');
-        boardHeight = document.querySelector('#board').scrollHeight;
-    console.log(boardHeight);
-    console.log(screenDarkener.style.height);
-    console.log(screenDarkener);
-    screenDarkener.style.height = boardHeight;
-    console.log(screenDarkener.style.height);
-    document.body.prepend(screenDarkener);
-    console.log(screenDarkener.style.height);
+    screenDarkener.style.height = bodyHeight + 'px';
+    document.querySelector('#board').prepend(screenDarkener);
+
+    // Create the modal with customized message
     let messages = document.createElement('div'),
         messageBox = document.createElement('div'),
         mainMessage = document.createElement('p');
@@ -181,15 +195,18 @@ function modal(condition, message) {
     };
     messageBox.prepend(messages);
     messageBox.prepend(mainMessage);
+
+    // Add the modal to the document
     document.querySelector('#board').appendChild(messageBox);
     messageBox.classList.add('modal');
     messageBox.setAttribute('id', 'messageBox')
+    
     document.querySelector('#reset2').addEventListener('click', startGame);
 };
 
 function win() {
     gameState = 'won';
-    modal('win', 'Congratulations! You won!');  // Maybe later feed this a template string using backticks
+    modal('win', 'Congratulations! You won!');
 };
 
 function lose(reason) {
@@ -199,11 +216,17 @@ function lose(reason) {
 }
 
 function startGame() {
-    gameState = 'waiting';
+    
+    // Remove the modal and screen darkener if present
     if (typeof messageBox !== 'undefined') {
         document.querySelector('#messageBox').remove();
     };
-    screenDarkener.style.visibility = 'hidden';
+    if (screenDarkener.parentElement === document.body) {
+        document.body.removeChild(screenDarkener);
+    };
+    
+    // Set values and board state back to starting positions
+    gameState = 'waiting';
     document.getElementById('board').innerHTML = '';
     num = 0;
     cardPositions = [];
@@ -211,7 +234,7 @@ function startGame() {
     moves = 0;
     timer = 35000;
     document.querySelector('#time').innerHTML = timer/1000;
-    document.getElementById('moves-remaining').innerHTML = moves;
+    document.getElementById('moves-taken').innerHTML = moves;
     endGameInfo = '';
     starCount = 3;
     newStar = null;
