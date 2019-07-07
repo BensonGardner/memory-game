@@ -10,23 +10,19 @@ body {
 }
 
 #main {
-
+    align: middle;
 }
 
 .screen-darkener {
     z-index: 0;
     width: 100vw;
-   /* height: 100vh;*/
     opacity: 0.7;
     position: absolute;
     background-color: black;
 }
 
-/*   Maybe this is the right appraoch. With 12 cards, it will render 
-// in even rows at 2, 3, 4nd 4 across. we can make sure 5 doesn't happen.*/
 #board {
-    width: 100%;
-    height: 100%;
+    margin: auto;
     display: flex; 
     flex-direction: row;
     flex-wrap: wrap;
@@ -44,13 +40,9 @@ h1 {
 }
 
 .card {
-    border-radius: 20px;
     border: 25px;
     border-color: cadetblue;
-    margin: 25px;
     padding: 15px;
-    width: 220px;
-    height: 120px;
 }
 
 .face-down {
@@ -97,7 +89,7 @@ h1 {
     padding: 25px;
 }
 
-#reset {
+button {
     border-radius: 6px;
     font-family: roboto, sans-serif;
     font-weight: 400;
@@ -111,4 +103,61 @@ h1 {
     font-weight: 400;
     background-color:white;
     color: darkcyan;
+}
+
+/*  Breakpoints and styling that maintain 
+    a consistent look for the cards and 
+    game board at all screen sizes, while
+    scaling up a little to make use of increased 
+    screen space.
+ 
+    Ratio of card width+padding to height+padding
+    is 1.48.
+  
+    Ratio of card width+padding to border-radius
+    is 4.8.
+
+    Ratio of card width+padding to margin is 19.2. 
+
+
+
+*/
+@media screen and (max-width: 517px) {
+    #board {
+        width: 320px;
+    }
+    
+    .card {
+        border-radius: 20px;
+        width: 66px;
+        margin: 5px;
+        height: 35px;
+    }
+    
+}
+
+@media screen and (min-width: 518px) and (max-width: 893px) {
+    #board {
+        width: 518px;
+    }
+    
+    .card {
+        border-radius: 32px;
+        width: 126px;
+        margin: 8px;
+        height: 76px;
+    }
+}
+
+@media screen and (min-width: 894px) {
+    #board {
+        width: 894px;
+    }
+    
+    .card {
+        border-radius: 56px;
+        width: 240px;
+        margin: 14px;
+        height: 153px;
+    }
 }

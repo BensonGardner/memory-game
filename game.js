@@ -15,10 +15,12 @@ let num = 0,
     cardPositions = [],
     faceUpSymbols = [],
     moves = 0,
-    timer = 35000;
-    gameState = 'waiting';
-    starCount = 3;
-    newStar = null;
+    timer = 35000,
+    gameState = 'waiting',
+    starCount = 3,
+    newStar = null,
+    symbol = '',
+    cardHTML = '',
     endGameInfo = 0;
 
 // To shuffle the deck, first we create an
@@ -38,8 +40,8 @@ function shuffle() {
 };
     
 function deal() {
-    let symbol = '';
-        cardHTML = '';
+    symbol = '';
+    cardHTML = '';
     
     // draw a div for each card, in the order given by 
     // the cardPositions array, which we just shuffled.
@@ -47,8 +49,9 @@ function deal() {
         //draw a div for current card
         symbol = symbolData[cardPosition];
         cardHTML = document.createElement('div');
-        cardHTML.innerHTML = '<div class="card face-down"><p class="card-symbol">' + symbol + '</p></div>'; 
-        
+        cardHTML.innerHTML = '<p class="card-symbol">' + symbol + '</p>'; 
+        cardHTML.classList.add('card');
+        cardHTML.classList.add('face-down');
         document.querySelector('#board').appendChild(cardHTML);
     };
     
@@ -74,8 +77,8 @@ function countdown() {
 function drawStars() {
     document.querySelector('#stars').innerHTML = '';
 
-    // Draw either a star or a star outline in the rating
-    // section of the page. 
+    // Draw either a star or the outline of a star in the
+    // rating section of the page. 
     for (i = 0; i < 3; i++) {
         if (i < starCount) {
             newStar = star.cloneNode(true);
@@ -86,13 +89,12 @@ function drawStars() {
     }
 };
 
-
 function advanceMoves() {
     moves++;
     document.getElementById('moves-taken').innerHTML = moves;
     if (moves === 9 || moves === 14 || moves === 17) {
         starCount--;
-        drawStars()
+        drawStars();
     };
     if (starCount == 0) {
         lose("Out of moves!");
@@ -200,7 +202,6 @@ function modal(condition, message) {
     document.querySelector('#board').appendChild(messageBox);
     messageBox.classList.add('modal');
     messageBox.setAttribute('id', 'messageBox')
-    
     document.querySelector('#reset2').addEventListener('click', startGame);
 };
 
