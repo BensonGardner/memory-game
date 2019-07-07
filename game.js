@@ -1,14 +1,10 @@
-// need a README
-// Maybe make the reset / reset2 situation more better
-// Anything else look weird?
-
 const symbolData = ['&#xF981', '&#xF981', ':-)', ':-)', ':-(', ':-(', 'Handlebar', 'Handlebar', 'pizza', 'pizza', 'animal', 'animal'],
       screenDarkener = document.createElement('div'),
       star = document.createElement('span'),
       starOutline = document.createElement('span');
 
-// Create star and star outline nodes using unicode symbols
-star.innerHTML = String.fromCodePoint(0x2605); //(0x2B50);
+// Create star and star outline nodes using unicode emoji symbols
+star.innerHTML = String.fromCodePoint(0x2605);
 starOutline.innerHTML = String.fromCodePoint(0x2606); 
 
 let num = 0,
