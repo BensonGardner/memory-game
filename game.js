@@ -63,6 +63,7 @@ function deal() {
 
 function countdown() {
     if (timer === 0) {
+        starCount = 0;
         lose('Out of time!');
         return;
     } else if (gameState === 'running') {
@@ -92,7 +93,7 @@ function drawStars() {
 function advanceMoves() {
     moves++;
     document.getElementById('moves-taken').innerHTML = moves;
-    if (moves === 9 || moves === 14 || moves === 17) {
+    if (moves === 11 || moves === 14 || moves === 16) {
         starCount--;
         drawStars();
     }
